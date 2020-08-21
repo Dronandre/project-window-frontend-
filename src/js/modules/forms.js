@@ -40,6 +40,7 @@ const forms = (state) => {
             item.appendChild(statusMessge);
 
             const formData = new FormData(item);
+            
             if (item.getAttribute('data-calc') === "end") {
                 for(let key in state){
                     formData.append(key, state[key]);
