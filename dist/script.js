@@ -17808,9 +17808,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 window.addEventListener('DOMContentLoaded', function () {
-  "use strict";
+  "use strict"; // Создаем пустой объект для хранения данных для передачи на сервер
 
-  var modalState = {};
+  var modalState = {}; // Создаем дату для таймера
+
   var deadline = '2020-08-31';
   Object(_modules_changeModalState__WEBPACK_IMPORTED_MODULE_4__["default"])(modalState);
   Object(_modules_modals__WEBPACK_IMPORTED_MODULE_1__["default"])();
@@ -17844,22 +17845,26 @@ var changeModalState = function changeModalState(state) {
       windowWidth = document.querySelectorAll('#width'),
       windowHeigth = document.querySelectorAll('#height'),
       windowType = document.querySelectorAll('#view_type'),
-      windowProfile = document.querySelectorAll('.checkbox');
+      windowProfile = document.querySelectorAll('.checkbox'); // Вызываем функуию валидацию цифр
+
   Object(_checkNumInputs__WEBPACK_IMPORTED_MODULE_1__["default"])('#width');
-  Object(_checkNumInputs__WEBPACK_IMPORTED_MODULE_1__["default"])('#height');
+  Object(_checkNumInputs__WEBPACK_IMPORTED_MODULE_1__["default"])('#height'); // Создаем функцию добавления свойств элементов по событиям в state
 
   function bindActionToElems(event, elem, prop) {
     elem.forEach(function (item, i) {
       item.addEventListener(event, function () {
         switch (item.nodeName) {
           case 'SPAN':
+            // Записываем индекс элементов SPAN в state
             state[prop] = i;
             break;
 
           case 'INPUT':
+            // Проверяем тип инпута
             if (item.getAttribute('type') === 'checkbox') {
               i === 0 ? state[prop] = "Холодное" : state[prop] = "Теплое";
               elem.forEach(function (box, j) {
+                // Скрываем checkbox на страницы
                 box.checked = false;
 
                 if (i == j) {
@@ -17867,12 +17872,14 @@ var changeModalState = function changeModalState(state) {
                 }
               });
             } else {
+              // Записываем значение инпута в state
               state[prop] = item.value;
             }
 
             break;
 
           case 'SELECT':
+            // Записываем значение select в state
             state[prop] = item.value;
             break;
         }
@@ -17913,6 +17920,7 @@ var checkNumInputs = function checkNumInputs(selector) {
   var numInputs = document.querySelectorAll(selector);
   numInputs.forEach(function (item) {
     item.addEventListener('input', function () {
+      // Используем регулярное выражение для вычесления только цифр
       item.value = item.value.replace(/\D/, '');
     });
   });
@@ -17954,13 +17962,14 @@ __webpack_require__.r(__webpack_exports__);
 
 var forms = function forms(state) {
   var form = document.querySelectorAll('form'),
-      inputs = document.querySelectorAll('input');
+      inputs = document.querySelectorAll('input'); // Вызываем функуию валидацию цифр
+
   Object(_checkNumInputs__WEBPACK_IMPORTED_MODULE_6__["default"])('input[name="user_phone"]');
   var message = {
     loading: 'Загрузга...',
     success: 'Спасибо!Скоро мы с вами свяжемся!',
     failure: 'Что-то пошло не так!'
-  };
+  }; // Делаем фунцию для получения данных с сервера
 
   var postData = function postData(url, data) {
     var res;
@@ -17989,27 +17998,31 @@ var forms = function forms(state) {
         }
       }
     });
-  };
+  }; // Отчищаем инпуты
+
 
   var clearInputs = function clearInputs() {
     inputs.forEach(function (item) {
       item.value = '';
     });
-  };
+  }; // Работаем с формами
+
 
   form.forEach(function (item) {
     item.addEventListener('submit', function (e) {
-      e.preventDefault();
+      e.preventDefault(); // Создаем класс статуса отпраки
+
       var statusMessge = document.createElement('div');
       statusMessge.classList.add('status');
       item.appendChild(statusMessge);
-      var formData = new FormData(item);
+      var formData = new FormData(item); // Добаляем дополнительные данные в state, если работаем с формой калькулятора
 
       if (item.getAttribute('data-calc') === "end") {
         for (var key in state) {
           formData.append(key, state[key]);
         }
-      }
+      } // запускаем фукцию отправки и получения данных
+
 
       postData('assets/server.php', formData).then(function (res) {
         console.log(res);
@@ -18042,23 +18055,29 @@ __webpack_require__.r(__webpack_exports__);
 var images = function images() {
   var imgPopup = document.createElement('div'),
       workSection = document.querySelector('.works'),
-      bigImg = document.createElement('img');
+      bigImg = document.createElement('img'); // Добавляем класс для отображения картинки
+
   imgPopup.classList.add('popup');
-  workSection.appendChild(imgPopup);
+  workSection.appendChild(imgPopup); // Работаем со стилями отображения изоражения
+
   imgPopup.style.justifyContent = 'center';
   imgPopup.style.alignItems = 'center';
   imgPopup.style.display = 'none';
   imgPopup.appendChild(bigImg);
   workSection.addEventListener('click', function (e) {
     e.preventDefault();
-    var target = e.target;
+    var target = e.target; // отображаем большое изображение по клику
 
     if (target && target.classList.contains('preview')) {
       imgPopup.style.display = 'flex';
-      document.body.style.overflow = "hidden";
+      document.body.style.overflow = "hidden"; // создаем ссылку на большое изображение
+
       var path = target.parentNode.getAttribute('href');
       bigImg.setAttribute('src', path);
-    }
+      bigImg.style.maxWidth = '50vh';
+      bigImg.style.maxHeight = '70vh';
+    } // делаем зактрые картинки по подложке
+
 
     if (target && target.matches('div.popup')) {
       imgPopup.style.display = 'none';
@@ -18085,55 +18104,81 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var modals = function modals() {
+  //Создаем функцию для модалок
   function bindModal(triggerSelector, modalSelector, closeSelector) {
     var closeClickOverlay = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
     var trigger = document.querySelectorAll(triggerSelector),
         modal = document.querySelector(modalSelector),
         close = document.querySelector(closeSelector),
-        windows = document.querySelectorAll('[data-modal]');
+        windows = document.querySelectorAll('[data-modal]'),
+        scroll = calcScroll(); //Работаем с триггером для отображения модалки
+
     trigger.forEach(function (item) {
       item.addEventListener('click', function (e) {
         if (e.target) {
           e.preventDefault();
-        }
+        } //Закрываем лишнии модалки
+
 
         windows.forEach(function (item) {
           item.style.display = 'none';
-        });
+        }); //Отображаем модалку на странице
+
         modal.style.display = "block";
         document.body.style.overflow = "hidden";
+        document.body.style.marginRight = "".concat(scroll, "px");
       });
-    });
+    }); //Закрываем модалку на кнопку
+
     close.addEventListener('click', function () {
       windows.forEach(function (item) {
         item.style.display = 'none';
       });
       modal.style.display = "none";
       document.body.style.overflow = "";
-    });
+      document.body.style.marginRight = "0px";
+    }); //Закрываем модалку на подложку
+
     modal.addEventListener('click', function (e) {
+      //Делаем проверку какую модалку можно закрыть
       if (e.target === modal && closeClickOverlay) {
         windows.forEach(function (item) {
           item.style.display = 'none';
         });
         modal.style.display = "none";
         document.body.style.overflow = "";
+        document.body.style.marginRight = "0px";
       }
     });
-  }
+  } //Функция отображения модалки по времени
+
 
   function showModalByTime(selector, time) {
     setTimeout(function () {
       document.querySelector(selector).style.display = 'block';
       document.body.style.overflow = "hidden";
     }, time);
+  } //Вычесляем ширину скролла
+
+
+  function calcScroll() {
+    var div = document.createElement('div');
+    div.style.width = '50px';
+    div.style.height = '50px';
+    div.style.overflowY = 'scroll';
+    div.style.visibility = 'hidden';
+    document.body.appendChild(div);
+    var scrollWidth = div.offsetWidth - div.clientWidth;
+    div.remove();
+    return scrollWidth;
   }
 
   bindModal('.popup_engineer_btn', '.popup_engineer', '.popup_engineer .popup_close');
   bindModal('.phone_link', '.popup', '.popup .popup_close');
   bindModal('.popup_calc_btn', '.popup_calc', '.popup_calc_close');
   bindModal('.popup_calc_button', '.popup_calc_profile', '.popup_calc_profile_close', false);
-  bindModal('.popup_calc_profile_button', '.popup_calc_end', '.popup_calc_end_close', false); // showModalByTime('.popup', 60000);
+  bindModal('.popup_calc_profile_button', '.popup_calc_end', '.popup_calc_end_close', false);
+  showModalByTime('.popup', 5000);
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (modals);
@@ -18160,7 +18205,7 @@ var tabs = function tabs(headerSelector, tabSelector, contentSelector, activeCla
   var display = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 'block';
   var header = document.querySelector(headerSelector),
       tab = document.querySelectorAll(tabSelector),
-      content = document.querySelectorAll(contentSelector);
+      content = document.querySelectorAll(contentSelector); //Функция скрытия контента табов
 
   function hideTabContent() {
     content.forEach(function (item) {
@@ -18169,7 +18214,8 @@ var tabs = function tabs(headerSelector, tabSelector, contentSelector, activeCla
     tab.forEach(function (item) {
       item.classList.remove(activeClass);
     });
-  }
+  } //Функция показа контента табов
+
 
   function showTabContent() {
     var i = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
@@ -18180,7 +18226,7 @@ var tabs = function tabs(headerSelector, tabSelector, contentSelector, activeCla
   hideTabContent();
   showTabContent();
   header.addEventListener('click', function (e) {
-    var target = e.target;
+    var target = e.target; //Проверяем куда именно кликнул user  
 
     if (target && (target.classList.contains(tabSelector.replace(/\./, "")) || target.parentNode.classList.contains(tabSelector.replace(/\./, "")))) {
       tab.forEach(function (item, i) {
@@ -18207,13 +18253,15 @@ var tabs = function tabs(headerSelector, tabSelector, contentSelector, activeCla
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 var timer = function timer(id, deadline) {
+  //Делаем правильное отображения цифр
   var addZero = function addZero(num) {
     if (num <= 9) {
       return '0' + num;
     } else {
       return num;
     }
-  };
+  }; //Получаем оставшиеся время до дедлайна
+
 
   var getTimeRemainig = function getTimeRemainig(endtime) {
     var t = Date.parse(endtime) - Date.parse(new Date()),
@@ -18228,7 +18276,8 @@ var timer = function timer(id, deadline) {
       'minutes': minutes,
       'seconds': seconds
     };
-  };
+  }; //Отображаем таймер на странице
+
 
   var setClock = function setClock(selector, endtime) {
     var timer = document.querySelector(selector),
@@ -18236,8 +18285,9 @@ var timer = function timer(id, deadline) {
         hours = timer.querySelector("#hours"),
         minutes = timer.querySelector("#minutes"),
         seconds = timer.querySelector("#seconds"),
-        timeInterval = setInterval(updateClock, 1000);
-    updateClock();
+        timeInterval = setInterval(updateClock, 1000); //Вызываем фунцию обновления таймера
+
+    updateClock(); //Создаем фунцию обновления таймера
 
     function updateClock() {
       var t = getTimeRemainig(endtime);
@@ -18254,8 +18304,6 @@ var timer = function timer(id, deadline) {
         clearInterval(timeInterval);
       }
     }
-
-    ;
   };
 
   setClock(id, deadline);

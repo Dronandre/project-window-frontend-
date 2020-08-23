@@ -1,4 +1,5 @@
 const timer = (id, deadline) => {
+    //Делаем правильное отображения цифр
     const addZero = (num) => {
         if (num <=9) {
             return '0' + num;
@@ -7,6 +8,7 @@ const timer = (id, deadline) => {
         }
     };
 
+    //Получаем оставшиеся время до дедлайна
     const getTimeRemainig = (endtime) => {
         const t = Date.parse(endtime) - Date.parse(new Date()),
               seconds = Math.floor((t/1000) % 60),
@@ -22,7 +24,7 @@ const timer = (id, deadline) => {
             'seconds': seconds
         };
     };
-
+    //Отображаем таймер на странице
     const setClock = (selector, endtime) => {
         const timer = document.querySelector(selector),
               days = timer.querySelector("#days"),
@@ -30,9 +32,9 @@ const timer = (id, deadline) => {
               minutes = timer.querySelector("#minutes"),
               seconds = timer.querySelector("#seconds"),
               timeInterval = setInterval(updateClock, 1000);
-
+        //Вызываем фунцию обновления таймера
         updateClock();
-
+        //Создаем фунцию обновления таймера
         function updateClock() {
             const t = getTimeRemainig(endtime);
 
@@ -49,10 +51,10 @@ const timer = (id, deadline) => {
 
                 clearInterval(timeInterval);
             }
-        };        
+        }        
     };
 
     setClock(id, deadline);
-}
+};
 
 export default timer;

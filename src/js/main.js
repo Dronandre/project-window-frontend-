@@ -1,4 +1,4 @@
-import "./slider"
+import "./slider";
 import modals from "./modules/modals";
 import tabs from "./modules/tabs";
 import forms from "./modules/forms";
@@ -9,10 +9,11 @@ import images from "./modules/images";
 
 window.addEventListener('DOMContentLoaded', () => {
     "use strict";
-
+    // Создаем пустой объект для хранения данных для передачи на сервер
     let modalState = {};
+    // Создаем дату для таймера
     let deadline = '2020-08-31';
-
+    
     changeModalState(modalState);
     modals();
     tabs('.glazing_slider ', '.glazing_block', '.glazing_content', 'active' );
@@ -21,6 +22,6 @@ window.addEventListener('DOMContentLoaded', () => {
     forms(modalState);
     timer('.container1', deadline);
     images();
-})
+});
 
 
